@@ -12,7 +12,9 @@ const con = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: process.env.MYSQL_PASSWORD,
-    database: 'nodejs'
+    database: 'nodejs',
+    dateStrings : "date",
+    multipleStatements: true
 });
 
 con.connect((err) => {
@@ -27,22 +29,26 @@ con.connect((err) => {
 
         con.query(sql, function (err, result) {
             if (err) {
-
             } else {
                 console.log('created users table');
             }
-
         });
 
         const sql2 = "CREATE TABLE works (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, title VARCHAR(255) NOT NULL, FOREIGN KEY (user_id) REFERENCES users (id) ); "
 
         con.query(sql2, function (err, result) {
             if (err) {
-
             } else {
                 console.log('created works table');
             }
+        });
 
+        const sql3 = "CREATE TABLE requests (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, title VARCHAR(255) NOT NULL, start_date date NOT NULL, due_date date, work_id int,isDone bool  DEFAULT NULL,who_did_id int ,FOREIGN KEY (work_id) REFERENCES works (id),FOREIGN KEY (who_did_id) REFERENCES users (id));"
+        con.query(sql3, function (err, result) {
+            if (err) {
+            } else {
+                console.log('created requests table');
+            }
         });
     });
 });
@@ -93,15 +99,26 @@ app.get('/users', (req, res) => {
 app.get('/users/:id', (req, res) => {
     console.log(req.params.id)
     var user_id = parseInt(req.params.id)
-    const sql = `select * from users where users.id = ${user_id} ;` 
-    console.log(sql)
+    const sql = `select * from users where users.id = ${user_id} ; select * from works where works.user_id = ${user_id} ;`;
     con.query(sql, function (err, result) {
-        // if (err) throw err;
+        console.log(result[0])
+        console.log(result[1])
+
+        res.render('users_detail.ejs', { users: result[0], works : result[1] })
+    })
+})
+
+app.get('/users/:user_id/:work_id', (req, res) => {
+    console.log(req.params.user_id, req.params.work_id)
+    var work_id = req.params.work_id
+    const sql = `select * from requests where requests.work_id = ${work_id} ;`
+    con.query(sql, function(err, result){
         console.log(result)
-        res.render('users_detail.ejs', { users: result })
+        res.render('user_works.ejs', { requests: result})
 
     })
 })
+
 
 app.delete('/users/delete', (req, res) => {
     console.log(req.body)

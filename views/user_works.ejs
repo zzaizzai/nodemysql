@@ -14,27 +14,18 @@
   </head>
   <body>
     <div>
-      <% for (var i =0; i < users.length; i++){ %>
+      <% for (var i =0; i < requests.length; i++){ %>
       <ul class="list-group">
         <li class="list-group-item">
-          <h4><%= users[i].user_id %></h4>
-          <p><%= users[i].name %></p>
-          <p><%= users[i].email %></p>
-          <button class="delete" data-id="<%=users[i].id %>">delete</button>
+          <div>Title: <%= requests[i].title %></div>
+          <div>Start Date: <%= requests[i].start_date %></div>
+          <div>Due Date: <%= requests[i].due_date %></div>
+          <div>is done: <%= requests[i].isDone %></div>
+          <div>is done: <%= requests[i].done_date %></div>
         </li>
       </ul>
-      
-      <% } %>
 
-      <h3 class="text-center">task list</h3>
-      <% for (var i =0; i < works.length; i++){ %>
-        <ul class="list-group">
-          <li class="list-group-item">
-            <h4><%= works[i].title %></h4>
-          </li>
-        </ul>
-  
-        <% } %>
+      <% } %>
 
       <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
