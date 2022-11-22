@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <title>Document</title>
+</head>
+<body>
+
+  <h4 class="container mt-4"><strong>Add Work</strong></h4>
+
+  <div class="container mt-3">
+      <div class="form-group">
+        <label>user id</label>
+        <input type="number" class="form-control" placeholder="only number", id="user-id">
+      </div>
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" class="form-control" id="title">
+      </div>
+      <button type="submit" class="btn btn-outline-secondary" id="submit">Submit</button>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+  <script>
+    $("#submit").click(function(e){
+      var title = $("#title").val()
+      var user_id = $("#user-id").val()
+      console.log(title, user_id)
+      $.ajax({
+        method: "POST",
+        url: "/works/mode/add/write",
+        data: { user_id : user_id,
+        title: title}
+      }).done(function(result){
+        console.log('saved new date')
+        $("#title").val("")
+
+      })
+    })  
+  </script>
+
+ 
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+</body>
+</html>

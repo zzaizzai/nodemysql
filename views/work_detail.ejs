@@ -13,56 +13,42 @@
     <title>Document</title>
   </head>
   <body>
+    <div class="mx-3">
+      <h5>Status</h5>
+      <div><%= analy[0].min_date %></div>
+      <div>All request: <%= analy[0].count_all %></div>
+      <div>Not completed requests: <%= analy[0].count_not_completed %></div>
+      <div>Completed request: <%= analy[0].count_completed %></div>
+    </div>
     <div>
-      <% for (var i =0; i < users.length; i++){ %>
       <ul class="list-group">
-        <li class="list-group-item">
-          <h4><%= users[i].user_id %></h4>
-          <p><%= users[i].name %></p>
-          <p><%= users[i].email %></p>
-        </li>
-      </ul>
-      
-      <% } %>
+        <% for (var i =0; i < requests.length; i++){ %>
 
-      <h3 class="text-center">Work List</h3>
-      <% for (var i =0; i < works.length; i++){ %>
-        <ul class="list-group work-box" data-id="<%=works[i].id%>">
-          <li class="list-group-item">
-            <h4><%= works[i].title %></h4>
-          </li>
-        </ul>
-  
+        <li class="list-group-item request-box" data-id="<%=requests[i].request_id %>">
+          <div>Title: <%= requests[i].title %></div>
+          <div>Start Date: <%= requests[i].start_date %></div>
+          <div>Due Date: <%= requests[i].due_date %></div>
+          <% if (requests[i].isDone) { %>
+          <h5>
+            Completed by <%= requests[i].who_did_name %> in <%=
+            requests[i].isDone_date %>
+          </h5>
+          <% } else { %>
+          <h5>Waitting....</h5>
+          <% } %>
+        </li>
+
         <% } %>
+      </ul>
 
       <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
       <script>
-        $(".work-box").click(function(e) {
+        $(".request-box").click(function (e) {
           console.log(this.dataset.id);
-          location.href = `/works/${this.dataset.id}`
-        })
-      </script>
-
-      <!-- <script>
-        $(".delete").click(function (e) {
-          var user_id = e.target.dataset.id;
-          var now_id = $(this);
-          console.log(user_id);
-          $.ajax({
-            method: "DELETE",
-            url: "/users/delete",
-            data: { id: user_id },
-          }).done(function (result) {
-            console.log('delete success')
-            now_id.parent('li').fadeOut();
-
-          }).fail(function(){
-            console.log('failed')
-
-          });
+          location.href = `/requests/${this.dataset.id}`;
         });
-      </script> -->
+      </script>
     </div>
 
     <script

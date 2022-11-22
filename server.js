@@ -25,7 +25,7 @@ con.connect((err) => {
     console.log('success');
     con.query('CREATE DATABASE nodejs', function (err, result) {
         // if (err) throw err;
-        const sql = "CREATE TABLE users (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, name VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL);"
+        const sql = "CREATE TABLE users (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, user_name VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL);"
 
         con.query(sql, function (err, result) {
             if (err) {
@@ -43,7 +43,7 @@ con.connect((err) => {
             }
         });
 
-        const sql3 = "CREATE TABLE requests (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, title VARCHAR(255) NOT NULL, start_date date NOT NULL, due_date date, work_id int,isDone bool  DEFAULT NULL,who_did_id int ,FOREIGN KEY (work_id) REFERENCES works (id),FOREIGN KEY (who_did_id) REFERENCES users (id));"
+        const sql3 = "CREATE TABLE requests (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, title VARCHAR(255) NOT NULL, start_date date NOT NULL, isDone_date date DEFAULT NULL, due_date date, work_id int,isDone bool  DEFAULT NULL,who_did_id int ,FOREIGN KEY (work_id) REFERENCES works (id),FOREIGN KEY (who_did_id) REFERENCES users (id));"
         con.query(sql3, function (err, result) {
             if (err) {
             } else {
@@ -92,7 +92,6 @@ app.get('/users', (req, res) => {
             console.log(result)
             res.render('users.ejs', { users: result })
         })
-
     })
 })
 
@@ -108,17 +107,49 @@ app.get('/users/:id', (req, res) => {
     })
 })
 
-app.get('/users/:user_id/:work_id', (req, res) => {
-    console.log(req.params.user_id, req.params.work_id)
+app.get('/works/:work_id', (req, res) => {
     var work_id = req.params.work_id
-    const sql = `select * from requests where requests.work_id = ${work_id} ;`
-    con.query(sql, function(err, result){
+    const sql1 = `select requests.id as request_id, work_id,  title , start_date , due_date , isDone_date , who_did_id , users.user_name as who_did_name, isDone  from  requests left join users on users.id  = requests.who_did_id where requests.work_id = ${work_id}  ;`
+    const sql2 = `select  min(start_date) as min_date, count(*) as count_all, (select count(*)  from requests where isDone = 1 and work_id = ${work_id}) as count_completed, (select count(*)  from requests where isDone =0 and work_id = ${work_id}) as count_not_completed  from  requests left join users on users.id  = requests.who_did_id where requests.work_id = ${work_id};`
+    con.query(sql1 + sql2, function(err, result){
         console.log(result)
-        res.render('user_works.ejs', { requests: result})
+        res.render('work_detail.ejs', { requests: result[0], analy: result[1] })
 
     })
 })
 
+app.get('/requests/:request_id', (req, res) => {
+    var request_id = req.params.request_id
+    const sql = `select * from requests left join users on requests.who_did_id = users.id where requests.id = ${request_id}`
+    con.query(sql, (err, result)=> {
+        if (err) {
+            console.log(err)
+        }
+        console.log(result)
+        res.render('request_detail.ejs', {requests: result})
+    })
+})
+
+app.get('/requests/mode/add', (req, res)=> {
+    console.log(req.query.work_id)
+    res.render('request_mode_add.ejs', {work_id: req.query.work_id})
+})
+
+app.get('/works/mode/add' ,(req, res) => {
+    res.render('work_mode_add')
+
+})
+
+app.post('/works/mode/add/write', (req, res)=> {
+    console.log(req.body)
+    const sql = `insert into works(user_id, title) values("${req.body.user_id}", "${req.body.title}")`
+    con.query(sql, (err, result) => {
+        if (err) {
+            console.log(err)
+        }
+        res.status(200).send({ message: "success" })
+    })
+})
 
 app.delete('/users/delete', (req, res) => {
     console.log(req.body)
@@ -135,7 +166,7 @@ app.post('/users/add', (req, res) => {
     console.log(req.body)
     con.connect(function (err) {
         console.log('insert users data');
-        const sql = `insert into users(name, email) values("${req.body.name}","${req.body.email}")`
+        const sql = `insert into users(user_name, email) values("${req.body.name}","${req.body.email}")`
         con.query(sql, (err, result, fields) => {
             if (err) throw err;
             res.send(result)
