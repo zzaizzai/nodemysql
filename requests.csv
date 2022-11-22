@@ -1,0 +1,7 @@
+"id","title","start_date","due_date","work_id","isDone","isDone_date","who_did_id"
+1,"make a sample
+","2022-10-01","2022-10-25",1,1,"2022-10-05",14
+2,sample in water for 24h,"2022-10-01","2022-10-25",1,0,,
+3,make a sapmles,"2022-10-01","2022-10-25",2,0,,
+4,sample in water for 24h,"2022-10-01","2022-10-25",2,0,,
+5,wash sample with oil,"2022-10-01","2022-10-26",1,0,,
