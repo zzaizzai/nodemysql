@@ -13,7 +13,7 @@ const con = mysql.createConnection({
     user: 'root',
     password: process.env.MYSQL_PASSWORD,
     database: 'nodejs',
-    dateStrings : "date",
+    dateStrings: "date",
     multipleStatements: true
 });
 
@@ -98,49 +98,78 @@ app.get('/users', (req, res) => {
 app.get('/users/:id', (req, res) => {
     console.log(req.params.id)
     var user_id = parseInt(req.params.id)
-    const sql = `select * from users where users.id = ${user_id} ; select * from works where works.user_id = ${user_id} ;`;
+    const sql = `select * from users where users.user_id = ${user_id} ; select * from works where works.user_id = ${user_id} ;`;
     con.query(sql, function (err, result) {
         console.log(result[0])
         console.log(result[1])
 
-        res.render('users_detail.ejs', { users: result[0], works : result[1] })
+        res.render('users_detail.ejs', { users: result[0], works: result[1] })
     })
 })
 
 app.get('/works/:work_id', (req, res) => {
     var work_id = req.params.work_id
-    const sql1 = `select requests.id as request_id, work_id,  title , start_date , due_date , isDone_date , who_did_id , users.user_name as who_did_name, isDone  from  requests left join users on users.id  = requests.who_did_id where requests.work_id = ${work_id}  ;`
-    const sql2 = `select  min(start_date) as min_date, count(*) as count_all, (select count(*)  from requests where isDone = 1 and work_id = ${work_id}) as count_completed, (select count(*)  from requests where isDone =0 and work_id = ${work_id}) as count_not_completed  from  requests left join users on users.id  = requests.who_did_id where requests.work_id = ${work_id};`
-    con.query(sql1 + sql2, function(err, result){
+    const sql1 = `select requests.request_id as request_id, work_id,  title , start_date , due_date , isDone_date , who_did_id , users.user_name as who_did_name, isDone  from  requests left join users on users.user_id  = requests.who_did_id where requests.work_id = ${work_id}  ;`
+    const sql2 = `select  min(start_date) as min_date, count(*) as count_all, (select count(*)  from requests where isDone = 1 and work_id = ${work_id}) as count_completed, (select count(*)  from requests where isDone =0 and work_id = ${work_id}) as count_not_completed  from  requests left join users on users.user_id  = requests.who_did_id where requests.work_id = ${work_id};`
+    const sql3 = `select * from works left join users on works.user_id  where works.user_id = users.user_id  and  works.work_id = ${req.params.work_id}`
+    con.query(sql1 + sql2 + sql3, function (err, result) {
         console.log(result)
-        res.render('work_detail.ejs', { requests: result[0], analy: result[1] })
+        res.render('work_detail.ejs', { requests: result[0], analy: result[1], work_and_client: result[2] })
 
     })
 })
 
 app.get('/requests/:request_id', (req, res) => {
     var request_id = req.params.request_id
-    const sql = `select * from requests left join users on requests.who_did_id = users.id where requests.id = ${request_id}`
-    con.query(sql, (err, result)=> {
+    const sql_current = `select requests.request_id, title, start_date , due_date , work_id , isDone , previous_request_id , users.user_id, user_name from requests left join users on requests.who_did_id = users.user_id where requests.request_id = ${request_id};`
+    const sql_previous = `select * from requests where request_id in (select previous_request_id  from requests where request_id = ${request_id});`
+    const sql_followings = `select * from requests where previous_request_id = ${request_id};`
+    con.query(sql_current + sql_previous + sql_followings, (err, result) => {
         if (err) {
             console.log(err)
         }
         console.log(result)
-        res.render('request_detail.ejs', {requests: result})
+        res.render('request_detail.ejs', { requests: result[0], requests_pre: result[1], requests_foll: result[2] })
     })
 })
 
-app.get('/requests/mode/add', (req, res)=> {
-    console.log(req.query.work_id)
-    res.render('request_mode_add.ejs', {work_id: req.query.work_id})
+app.get('/requests/mode/add', (req, res) => {
+    var work_id_in_query = "0"
+
+    if (req.query.work_id) {
+        work_id_in_query = req.query.work_id
+    }
+    console.log(work_id_in_query)
+    const sql = `select * from works left join users on works.user_id  where works.user_id = users.user_id  and works.work_id = ${work_id_in_query}`
+    con.query(sql, (err, result) => {
+        if (err) {
+            console.log(err)
+        }
+        console.log(result)
+        res.render('request_mode_add.ejs', { work_id: work_id_in_query, works: result })
+    })
+    // res.render('request_mode_add.ejs', {work_id: req.query.work_id})
 })
 
-app.get('/works/mode/add' ,(req, res) => {
-    res.render('work_mode_add')
-
+app.get('/works/mode/add', (req, res) => {
+    res.render('work_mode_add.ejs')
 })
 
-app.post('/works/mode/add/write', (req, res)=> {
+app.get('/works/mode/edit', (req, res) => {
+    work_id_in_query = "0"
+    if (req.query.work_id) {
+        work_id_in_query = req.query.work_id
+    }
+    const sql = `select * from works where work_id = ${work_id_in_query}`
+    con.query(sql, (err, result) => {
+        console.log(result)
+        res.render('work_mode_edit.ejs', { work_edit: result[0] })
+    })
+})
+
+
+
+app.post('/works/mode/add/write', (req, res) => {
     console.log(req.body)
     const sql = `insert into works(user_id, title) values("${req.body.user_id}", "${req.body.title}")`
     con.query(sql, (err, result) => {
@@ -154,7 +183,7 @@ app.post('/works/mode/add/write', (req, res)=> {
 app.delete('/users/delete', (req, res) => {
     console.log(req.body)
     req.body.id = parseInt(req.body.id)
-    const sql = `delete from users where id = ${req.body.id}`
+    const sql = `delete from users where user_id = ${req.body.id}`
     con.query(sql, (err, result, fields) => {
         if (err) throw err;
         console.log('deleted')
@@ -174,3 +203,8 @@ app.post('/users/add', (req, res) => {
     })
 
 })
+
+
+app.use((req, res, next) => {
+    res.render('404.ejs')
+});

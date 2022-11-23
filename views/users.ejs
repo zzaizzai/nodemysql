@@ -16,12 +16,12 @@
     <div>
       <h2 class="text-center">Users Data</h2>
       <% for (var i =0; i < users.length; i++){ %>
-      <ul class="user-box" data-id="<%=users[i].id %>" class="list-group">
+      <ul class="user-box" data-id="<%=users[i].user_id %>" class="list-group">
         <li class="list-group-item">
-          <h4><%= users[i].id %></h4>
+          <h4><%= users[i].user_id %></h4>
           <p><%= users[i].name %></p>
           <p><%= users[i].email %></p>
-          <button class="delete" data-id="<%=users[i].id %>">delete</button>
+          <button class="delete" data-id="<%=users[i].user_id %>">delete</button>
         </li>
       </ul>
 

@@ -15,24 +15,63 @@
   <body>
     <div class="mx-3 container">
       <h5>Information of requests</h5>
-      <div>id: <%= requests[0].id %></div>
-      <div>Title: <%= requests[0].title %></div>
+      <h4><%= requests[0].title %> (id: <%= requests[0].request_id %>)</h4>
       <div>Start date <%= requests[0].start_date %></div>
       <div>Due date <%= requests[0].due_date %></div>
       <div>work : <%= requests[0].work_id %></div>
       <% if (requests[0].isDone==1) { %>
-      <h5>
-        it is done by  <%= requests[0].user_name %>
-      </h5>
+      <h5>it is done by <%= requests[0].user_name %></h5>
       <% } else { %>
       <h5>Waitting....</h5>
       <% } %>
     </div>
 
-    <div>add comments from user</div>
     <div>
-      <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+      <ul class="list-group">
+        <li class="list-group-item">
+          <h4>Privious</h4>
+          <% for (var i =0; i < requests_pre.length; i++){ %>
+
+          <h4><%= requests_pre[i].title %></h4>
+          <div class="d-flex">
+            <div class="mx-2">Completed: <%= requests_pre[i].isDone_date %></div>
+            <div class="mx-2">Due: <%= requests_pre[i].due_date %></div>
+            <button
+              class="request-more mx-2"
+              data-id="<%= requests_pre[i].request_id %>"
+            >
+              more
+            </button>
+          </div>
+
+          <% } %> <% if (requests_pre.length == 0 ) { %>
+          <div>none</div>
+          <% } %>
+        </li>
+      </ul>
     </div>
+
+    <div>
+      <ul class="list-group">
+        <li class="list-group-item">
+          <h4>Following</h4>
+          <% for (var i =0; i < requests_foll.length; i++){ %>
+          <h5><%= requests_foll[i].title %></h5>
+        </li>
+      </ul>
+
+      <% } %>
+    </div>
+
+    <div>add comments from user</div>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+    <script>
+      $(".request-more").click(function (e) {
+        console.log(this.dataset.id);
+        location.href = `/requests/${this.dataset.id}`;
+      });
+    </script>
 
     <script
       src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"

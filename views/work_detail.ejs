@@ -19,12 +19,25 @@
       <div>All request: <%= analy[0].count_all %></div>
       <div>Not completed requests: <%= analy[0].count_not_completed %></div>
       <div>Completed request: <%= analy[0].count_completed %></div>
+      <button id="add-request" data-id="<%= work_and_client[0].work_id %>">
+        Add new request
+      </button>
+      <button id="edit-work" data-id="<%= work_and_client[0].work_id %>">
+        Edit
+      </button>
+    </div>
+    <div class="mx-3">
+      <div>Wrok of <%= work_and_client[0].user_name %></div>
+      <div>It is started from <%= work_and_client[0].start_date %></div>
     </div>
     <div>
       <ul class="list-group">
         <% for (var i =0; i < requests.length; i++){ %>
 
-        <li class="list-group-item request-box" data-id="<%=requests[i].request_id %>">
+        <li
+          class="list-group-item request-box"
+          data-id="<%=requests[i].request_id %>"
+        >
           <div>Title: <%= requests[i].title %></div>
           <div>Start Date: <%= requests[i].start_date %></div>
           <div>Due Date: <%= requests[i].due_date %></div>
@@ -47,6 +60,16 @@
         $(".request-box").click(function (e) {
           console.log(this.dataset.id);
           location.href = `/requests/${this.dataset.id}`;
+        });
+
+        $("#add-request").click(function (e) {
+          console.log(this.dataset.id);
+          location.href = `/requests/mode/add?work_id=${this.dataset.id}`;
+        });
+
+        $("#edit-work").click(function (e) {
+          console.log(this.dataset.id);
+          location.href = `/works/mode/edit?work_id=${this.dataset.id}`;
         });
       </script>
     </div>
