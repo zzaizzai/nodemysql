@@ -24,17 +24,13 @@
         <div>work: <%= works[0].user_name %></div>
         <% } %>
         <label>user id</label>
-        <input
-          type="number"
-          class="form-control"
-          placeholder="only number"
-          ,
-          id="user-id"
-        />
       </div>
       <div class="form-group">
         <label>Title</label>
         <input type="text" class="form-control" id="title" />
+      </div>
+      <div>
+        <label>former request</label>
       </div>
       <button type="submit" class="btn btn-outline-secondary" id="submit">
         Submit
@@ -44,19 +40,6 @@
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
     <script>
-      $("#submit").click(function (e) {
-        var title = $("#title").val();
-        var user_id = $("#user-id").val();
-        console.log(title, user_id);
-        $.ajax({
-          method: "POST",
-          url: "/works/mode/add/write",
-          data: { user_id: user_id, title: title },
-        }).done(function (result) {
-          console.log("saved new date");
-          $("#title").val("");
-        });
-      });
     </script>
 
     <script

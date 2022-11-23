@@ -14,21 +14,24 @@
   </head>
   <body>
     <div class="mx-3">
-      <h5>Status</h5>
+      <h3>Status</h3>
+      <h4><%= work_and_client[0].title %></h4>
       <div><%= analy[0].min_date %></div>
       <div>All request: <%= analy[0].count_all %></div>
       <div>Not completed requests: <%= analy[0].count_not_completed %></div>
       <div>Completed request: <%= analy[0].count_completed %></div>
+    </div>
+    <div class="mx-3">
+      <div>Wrok of <%= work_and_client[0].user_name %></div>
+
+      <div>It is started from <%= work_and_client[0].start_date %></div>
+
       <button id="add-request" data-id="<%= work_and_client[0].work_id %>">
         Add new request
       </button>
       <button id="edit-work" data-id="<%= work_and_client[0].work_id %>">
         Edit
       </button>
-    </div>
-    <div class="mx-3">
-      <div>Wrok of <%= work_and_client[0].user_name %></div>
-      <div>It is started from <%= work_and_client[0].start_date %></div>
     </div>
     <div>
       <ul class="list-group">

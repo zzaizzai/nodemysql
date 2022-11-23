@@ -22,26 +22,35 @@
           <p><%= users[i].email %></p>
         </li>
       </ul>
-      
+
       <% } %>
 
       <h3 class="text-center">Work List</h3>
       <% for (var i =0; i < works.length; i++){ %>
-        <ul class="list-group work-box" data-id="<%=works[i].work_id%>">
-          <li class="list-group-item">
-            <h4><%= works[i].title %></h4>
-          </li>
-        </ul>
-  
-        <% } %>
+      <ul class="list-group work-box">
+        <li class="list-group-item">
+          <div class="row">
+            <h4 class="mx-2"><%= works[i].title %></h4>
+            <button data-id="<%=works[i].work_id%>" class="show-detail mx-2">
+              more
+            </button>
+          </div>
+          <div class="row">
+            <div><%= works[i].start_date %>  ~  </div>
+            <div>done date</div>
+          </div>
+        </li>
+      </ul>
+
+      <% } %>
 
       <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
       <script>
-        $(".work-box").click(function(e) {
+        $(".show-detail").click(function (e) {
           console.log(this.dataset.id);
-          location.href = `/works/${this.dataset.id}`
-        })
+          location.href = `/works/${this.dataset.id}`;
+        });
       </script>
 
       <!-- <script>

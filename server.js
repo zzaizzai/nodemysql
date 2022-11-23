@@ -54,9 +54,7 @@ con.connect((err) => {
 });
 
 
-app.listen(8080, function () {
-    console.log('listening on 8080')
-});
+
 
 
 app.get('/', function (req, res) {
@@ -96,9 +94,9 @@ app.get('/users', (req, res) => {
 })
 
 app.get('/users/:id', (req, res) => {
-    console.log(req.params.id)
+    console.lopreviousg(req.params.id)
     var user_id = parseInt(req.params.id)
-    const sql = `select * from users where users.user_id = ${user_id} ; select * from works where works.user_id = ${user_id} ;`;
+    const sql = `select * from users where users.user_id = ${user_id} ; select * from works where works.user_id = ${user_id} order by start_date desc;`;
     con.query(sql, function (err, result) {
         console.log(result[0])
         console.log(result[1])
@@ -121,10 +119,10 @@ app.get('/works/:work_id', (req, res) => {
 
 app.get('/requests/:request_id', (req, res) => {
     var request_id = req.params.request_id
-    const sql_current = `select requests.request_id, title, start_date , due_date , work_id , isDone , previous_request_id , users.user_id, user_name from requests left join users on requests.who_did_id = users.user_id where requests.request_id = ${request_id};`
-    const sql_previous = `select * from requests where request_id in (select previous_request_id  from requests where request_id = ${request_id});`
-    const sql_followings = `select * from requests where previous_request_id = ${request_id};`
-    con.query(sql_current + sql_previous + sql_followings, (err, result) => {
+    const sql_current = `select requests.request_id, title, start_date , due_date , work_id , isDone , former_request_id , users.user_id, user_name from requests left join users on requests.who_did_id = users.user_id where requests.request_id = ${request_id};`
+    const sql_former = `select * from requests where request_id in (select former_request_id  from requests where request_id = ${request_id});`
+    const sql_following = `select * from requests where former_request_id = ${request_id};`
+    con.query(sql_current + sql_former + sql_following, (err, result) => {
         if (err) {
             console.log(err)
         }
@@ -180,6 +178,17 @@ app.post('/works/mode/add/write', (req, res) => {
     })
 })
 
+app.post('/works/mode/edit/write', (req, res) => {
+    console.log(req.body)
+    const sql = `update works set title = "${req.body.title}", purpose_text = "${req.body.purpose_text}" where work_id = ${req.body.work_id}`
+    con.query(sql, (err, result) => {
+        if (err) {
+            console.log(err)
+        }
+        res.status(200).send({ message: "success" })
+    })
+})
+
 app.delete('/users/delete', (req, res) => {
     console.log(req.body)
     req.body.id = parseInt(req.body.id)
@@ -207,4 +216,9 @@ app.post('/users/add', (req, res) => {
 
 app.use((req, res, next) => {
     res.render('404.ejs')
+});
+
+
+app.listen(8080, function () {
+    console.log('listening on 8080')
 });
