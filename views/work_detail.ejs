@@ -16,41 +16,65 @@
     <div class="mx-3">
       <h3>Status</h3>
       <h4><%= work_and_client[0].title %></h4>
-      <div><%= analy[0].min_date %></div>
-      <div>All request: <%= analy[0].count_all %></div>
-      <div>Not completed requests: <%= analy[0].count_not_completed %></div>
-      <div>Completed request: <%= analy[0].count_completed %></div>
+      <div>Start: <%= work_and_client[0].start_date %></div>
+      <div>
+        All request: <%= analy[0].count_all %> ( Waitting: <%=
+        analy[0].count_not_completed %> , Completed: <%=
+        analy[0].count_completed %> )
+      </div>
     </div>
     <div class="mx-3">
-      <div>Wrok of <%= work_and_client[0].user_name %></div>
-
-      <div>It is started from <%= work_and_client[0].start_date %></div>
-
-      <button id="add-request" data-id="<%= work_and_client[0].work_id %>">
-        Add new request
-      </button>
-      <button id="edit-work" data-id="<%= work_and_client[0].work_id %>">
-        Edit
-      </button>
+      <div>Client: <%= work_and_client[0].user_name %></div>
+      <div>Purpose: <%= work_and_client[0].purpose_text %></div>
+      <div class="my-2">
+        <button
+          id="add-request"
+          class="btn btn-secondary btn-sm mx-2"
+          data-id="<%= work_and_client[0].work_id %>"
+        >
+          Add new request
+        </button>
+        <button
+          id="edit-work"
+          class="btn btn-secondary btn-sm"
+          data-id="<%= work_and_client[0].work_id %>"
+        >
+          Edit
+        </button>
+        <button
+          id="finish-work"
+          class="btn btn-danger btn-sm mx-2"
+          data-id="<%= work_and_client[0].work_id %>"
+          onclick="window.confirm('Finish it?')"
+        >
+          Finish
+        </button>
+      </div>
     </div>
     <div>
       <ul class="list-group">
         <% for (var i =0; i < requests.length; i++){ %>
 
-        <li
-          class="list-group-item request-box"
-          data-id="<%=requests[i].request_id %>"
-        >
-          <div>Title: <%= requests[i].title %></div>
-          <div>Start Date: <%= requests[i].start_date %></div>
+        <li class="list-group-item request-box">
+          <div class="row">
+            <h5 class="mx-2"><%= i + 1 %>. <%= requests[i].title %></h5>
+            <button
+              class="more-btn btn btn-secondary btn-sm mx-2"
+              data-id="<%=requests[i].request_id %>"
+            >
+              More
+            </button>
+          </div>
+
+          <!-- <div>Start Date: <%= requests[i].start_date %></div> -->
           <div>Due Date: <%= requests[i].due_date %></div>
           <% if (requests[i].isDone) { %>
-          <h5>
+          <p class="text-primary">
             Completed by <%= requests[i].who_did_name %> in <%=
             requests[i].isDone_date %>
-          </h5>
+          </p>
           <% } else { %>
-          <h5>Waitting....</h5>
+          <!-- <h5>Waitting....</h5> -->
           <% } %>
         </li>
 
@@ -60,7 +84,7 @@
       <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
       <script>
-        $(".request-box").click(function (e) {
+        $(".more-btn").click(function (e) {
           console.log(this.dataset.id);
           location.href = `/requests/${this.dataset.id}`;
         });

@@ -18,20 +18,28 @@
         <% if (work_id) { %>
         <h5>work_id: <%= work_id %></h5>
         <% } %> <% if (works[0]) { %>
-        <h5>work: <%= works[0].id %></h5>
-        <div>work: <%= works[0].title %></div>
-        <div>work: <%= works[0].user_id %></div>
+        <h5>work_id: <%= works[0].id %></h5>
+        <div>title: <%= works[0].title %></div>
+        <div>user_id: <%= works[0].user_id %></div>
         <div>work: <%= works[0].user_name %></div>
         <% } %>
-        <label>user id</label>
+      </div>
+      <div>
+        <label>former request id</label>
+        <select name="" id="former-request-id" class="form-control">
+          <option value="">None</option>
+          <% for (var i =0; i < request_list.length; i++){ %>
+          <option value="<%= request_list[i].request_id %>">
+            <%= request_list[i].title %>
+          </option>
+          <% } %>
+        </select>
       </div>
       <div class="form-group">
         <label>Title</label>
         <input type="text" class="form-control" id="title" />
       </div>
-      <div>
-        <label>former request</label>
-      </div>
+
       <button type="submit" class="btn btn-outline-secondary" id="submit">
         Submit
       </button>
@@ -40,6 +48,11 @@
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
     <script>
+      $("#submit").click(function () {
+        former_request_id = $('#former-request-id').val()
+        console.log(former_request_id)
+        console.log("submit add request");
+      });
     </script>
 
     <script

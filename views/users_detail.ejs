@@ -14,19 +14,24 @@
   </head>
   <body>
     <div>
-      <% for (var i =0; i < users.length; i++){ %>
       <ul class="list-group">
         <li class="list-group-item">
-          <h4><%= users[i].user_id %></h4>
-          <p><%= users[i].name %></p>
-          <p><%= users[i].email %></p>
+          <h4><%= users[0].user_id %></h4>
+          <h4><%= users[0].user_name %></h4>
+          <p><%= users[0].email %></p>
         </li>
       </ul>
-
-      <% } %>
-
-      <h3 class="text-center">Work List</h3>
+      <div>
+        <h3 class="text-center">Wrok List</h3>
+        <div class="row justify-content-center">
+          <input class="center" id="search-input" type="text" placeholder="rearch" />
+          <button id="search-btn" data-id="<%= users[0].user_id %>">
+            search
+          </button>
+        </div>
+      </div>
       <% for (var i =0; i < works.length; i++){ %>
+
       <ul class="list-group work-box">
         <li class="list-group-item">
           <div class="row">
@@ -36,7 +41,7 @@
             </button>
           </div>
           <div class="row">
-            <div><%= works[i].start_date %>  ~  </div>
+            <div><%= works[i].start_date %></div>
             <div>done date</div>
           </div>
         </li>
@@ -51,27 +56,14 @@
           console.log(this.dataset.id);
           location.href = `/works/${this.dataset.id}`;
         });
-      </script>
 
-      <!-- <script>
-        $(".delete").click(function (e) {
-          var user_id = e.target.dataset.id;
-          var now_id = $(this);
-          console.log(user_id);
-          $.ajax({
-            method: "DELETE",
-            url: "/users/delete",
-            data: { id: user_id },
-          }).done(function (result) {
-            console.log('delete success')
-            now_id.parent('li').fadeOut();
-
-          }).fail(function(){
-            console.log('failed')
-
-          });
+        $("#search-btn").click(function () {
+          var search_value = $("#search-input").val();
+          window.location.replace(
+            `/users/${this.dataset.id}?value=${search_value}`
+          );
         });
-      </script> -->
+      </script>
     </div>
 
     <script

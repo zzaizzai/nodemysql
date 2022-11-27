@@ -15,15 +15,8 @@
 
     <div class="container mt-3">
       <div class="form-group">
-        <label>user id</label>
-        <input
-          type="number"
-          class="form-control"
-          placeholder="only number"
-          ,
-          id="user-id"
-          value="<%= work_edit.user_id %>"
-        />
+        <h4>Start Date: <%= work_edit.start_date %></h4>
+        <h4>User_id: <%= work_edit.user_id %></h4>
       </div>
       <div class="form-group">
         <label>Title</label>
@@ -34,10 +27,7 @@
           value="<%= work_edit.title %>"
         />
       </div>
-      <div class="form-group">
-        <label> Start Date</label>
-        <input type="date" value="<%= work_edit.start_date %>" />
-      </div>
+
       <div>
         <label>Purpose</label>
         <textarea
@@ -63,18 +53,38 @@
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
     <script>
-      $("#submit").click(function (e) {
+      $("input[type=text]").on("keyup", function (e) {
+        if (e.key == "Enter" || e.keyCode === 13) {
+          console.log("enter");
+          $("#submit").trigger("click");
+        }
+      });
+
+      $("textarea").on("keyup", function (e) {
+        if (e.key == "Enter" || e.keyCode === 13) {
+          console.log("enter");
+          $("#submit").trigger("click");
+        }
+      });
+
+      $("#submit").click(function () {
         var title = $("#title").val();
         var user_id = $("#user-id").val();
         var purpose_text = $("#purpose-text").val();
-        console.log(this.dataset.id)
+        console.log(this.dataset.id);
         console.log(title, user_id);
         $.ajax({
           method: "POST",
           url: "/works/mode/edit/write",
-          data: { work_id:this.dataset.id,  user_id: user_id, title: title, purpose_text: purpose_text },
+          data: {
+            work_id: this.dataset.id,
+            user_id: user_id,
+            title: title,
+            purpose_text: purpose_text,
+          },
         }).done(function (result) {
           console.log("saved new date");
+          location.href = document.referrer;
         });
       });
     </script>

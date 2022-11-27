@@ -14,25 +14,29 @@
   </head>
   <body>
     <div>
-      <h2 class="text-center">Users Data</h2>
-      <% for (var i =0; i < users.length; i++){ %>
-      <ul class="user-box" data-id="<%=users[i].user_id %>" class="list-group">
-        <li class="list-group-item">
-          <div class="row">
-            <h5 class="mx-2"><%= users[i].user_id %></h5>
-            <p class="mx-2"><%= users[i].user_name %></p>
-            <p class="mx-2"><%= users[i].email %></p>
-            <button onclick="location.href ='/users/<%= users[i].user_id %>'" class="mx-2">more</button>
-          </div>
-        </li>
-      </ul>
+      <h2 class="text-center">Samples</h2>
+      <div>
+        <% for (var i =0; i < samples.length; i++){ %>
+        <ul class="list-group work-box">
+          <li class="list-group-item">
+            <div class="row"></div>
+            <div class="row">
+              <div class="mx-2">sample_id: <%= samples[i].sample_id %></div>
+              <div class="mx-2">re_id: <%= samples[i].request_id %></div>
+              <div class="mx-2">require: <%= samples[i].require %></div>
+              <div class="mx-2"><%= samples[i].kind %> ~</div>
+              <div class="mx-2"><%= samples[i].condition %></div>
+              <div class="mx-2">Made <%= samples[i].made_date %></div>
+              <div class="mx-2">by <%= samples[i].user_name %></div>
+              <button onclick="location.href = '/requests/<%= samples[i].request_id %>' " class="mx-2">More</button>
+            </div>
+          </li>
+        </ul>
 
-      <% } %>
+        <% } %>
+      </div>
 
       <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-
-      <script>
-      </script>
     </div>
 
     <script
