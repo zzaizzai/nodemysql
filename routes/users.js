@@ -16,13 +16,14 @@ router.get('/users', (req, res) => {
 router.get('/users/:id', (req, res) => {
 
     console.log(req.params.id)
+    var search_val = req.query.value
     var user_id = parseInt(req.params.id)
     const sql = `select * from users where users.user_id = ${user_id} ; `;
     var sql_works = `select * from works where works.user_id = ${user_id} order by start_date desc;`
 
-    if (req.query.value) {
+    if (search_val) {
         console.log("query exist")
-        sql_works = `select * from works where works.user_id = ${user_id} and works.title like '%${req.query.value}%' order by start_date desc;`
+        sql_works = `select * from works where works.user_id = ${user_id} and works.title like '%${search_val}%' order by start_date desc;`
     }
 
     con.query(sql + sql_works, function (err, result) {
@@ -30,7 +31,7 @@ router.get('/users/:id', (req, res) => {
         console.log(result[1])
 
 
-        res.render('users_detail.ejs', { users: result[0], works: result[1] })
+        res.render('users_detail.ejs', { users: result[0], works: result[1], search_val : search_val })
     })
 })
 

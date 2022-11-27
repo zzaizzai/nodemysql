@@ -21,7 +21,7 @@
           <div class="row">
             <h5 class="mx-2"><%= users[i].user_id %></h5>
             <p class="mx-2"><%= users[i].user_name %></p>
-            <p class="mx-2"><%= users[i].email %></p>
+            <p class="mx-2">(<%= users[i].department %>)</p>
             <button onclick="location.href ='/users/<%= users[i].user_id %>'" class="mx-2">more</button>
           </div>
         </li>

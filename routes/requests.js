@@ -14,6 +14,16 @@ router.get('/requests/:request_id', (req, res) => {
     })
 })
 
+router.get('/requests/:requests_id/get_comments', (req, res) => {
+    var request_id = req.params.requests_id
+    const sql_comments = `select * from request_comments left join users on request_comments.comment_user_id = users.user_id where request_comments.request_id = ${request_id}`
+    con.query(sql_comments, (err, result) => {
+        console.log(result)
+        res.send({ comments: result })
+    })
+
+})
+
 
 router.get('/requests/mode/add', (req, res) => {
     var work_id_in_query = "0"

@@ -55,14 +55,12 @@
     <script>
       $("input[type=text]").on("keyup", function (e) {
         if (e.key == "Enter" || e.keyCode === 13) {
-          console.log("enter");
           $("#submit").trigger("click");
         }
       });
 
       $("textarea").on("keyup", function (e) {
         if (e.key == "Enter" || e.keyCode === 13) {
-          console.log("enter");
           $("#submit").trigger("click");
         }
       });
@@ -71,8 +69,6 @@
         var title = $("#title").val();
         var user_id = $("#user-id").val();
         var purpose_text = $("#purpose-text").val();
-        console.log(this.dataset.id);
-        console.log(title, user_id);
         $.ajax({
           method: "POST",
           url: "/works/mode/edit/write",
@@ -83,7 +79,6 @@
             purpose_text: purpose_text,
           },
         }).done(function (result) {
-          console.log("saved new date");
           location.href = document.referrer;
         });
       });

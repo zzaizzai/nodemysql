@@ -21,7 +21,7 @@
         Parent Work
       </button>
       <h5>Information of requests</h5>
-      <h4><%= requests[0].title %> (id: <%= requests[0].request_id %>)</h4>
+      <h4><%= requests[0].title %> (id: <span id="request-id" ><%= requests[0].request_id %></span> )</h4>
       <div>Start date <%= requests[0].start_date %></div>
       <div>Due date <%= requests[0].due_date %></div>
       <div>parent_work : <%= requests[0].work_id %></div>
@@ -34,7 +34,12 @@
 
     <div class="mx-3 container"><h5>Samples</h5></div>
 
-    <div class="mx-3 container"><h5>Comments</h5></div>
+    <div class="mx-3 container">
+      <h5 class="comments-box">Comments</h5>
+      <div></div>
+      <textarea name="" id="" cols="50" rows="2" class="mx-2"></textarea>
+      <button>Send</button>
+    </div>
     <div>
       <ul class="list-group">
         <li class="list-group-item">
@@ -43,9 +48,14 @@
 
           <h4><%= requests_former[i].title %></h4>
           <div class="d-flex">
-            <div class="mx-2">
+            <% if (requests_former[i].isDone_date) { %>
+            <div class="mx-2 text-primary font-weight-bold">
               Completed: <%= requests_former[i].isDone_date %>
             </div>
+            <% } else { %>
+            <div class="mx-2 text-danger font-weight-bold">Waitting</div>
+            <% } %>
+
             <div class="mx-2">Due: <%= requests_former[i].due_date %></div>
             <button
               class="btn btn-secondary btn-sm"
@@ -84,10 +94,18 @@
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
     <script>
-      // $(".request-more").click(function (e) {
-      //   console.log(this.dataset.id);
-      //   location.href = `/requests/${this.dataset.id}`;
-      // });
+      var request_id = $('#request-id').text();
+      $.ajax({
+        method: "GET",
+        url: `/requests/${request_id}/get_comments`
+      }).done((result)=> {
+        console.log(result.comments)
+        result.comments.forEach(element => {
+          $('.comments-box').append(`<div>${element.user_name}: ${element.comment_text}</div>`)
+          
+        });
+
+      })
     </script>
 
     <script

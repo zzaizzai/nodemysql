@@ -18,14 +18,22 @@
         <li class="list-group-item">
           <h4><%= users[0].user_id %></h4>
           <h4><%= users[0].user_name %></h4>
-          <p><%= users[0].email %></p>
+          <div>Email: <%= users[0].email %></div>
+          <div>Department: <%= users[0].department %></div>
         </li>
       </ul>
       <div>
         <h3 class="text-center">Wrok List</h3>
         <div class="row justify-content-center">
-          <input class="center" id="search-input" type="text" placeholder="rearch" />
-          <button id="search-btn" data-id="<%= users[0].user_id %>">
+          <input
+            class="center"
+            id="search-input"
+            type="text"
+            placeholder="rearch"
+            value="<%= search_val %>"
+          />
+          <div></div>
+          <button id="search-btn" class="btn btn-outline-primary" data-id="<%= users[0].user_id %>">
             search
           </button>
         </div>
@@ -52,6 +60,12 @@
       <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
       <script>
+        $("input[type=text]").on("keyup", function (e) {
+          if (e.key == "Enter" || e.keyCode === 13) {
+            $("#search-btn").trigger("click");
+          }
+        });
+
         $(".show-detail").click(function (e) {
           console.log(this.dataset.id);
           location.href = `/works/${this.dataset.id}`;
@@ -59,9 +73,15 @@
 
         $("#search-btn").click(function () {
           var search_value = $("#search-input").val();
-          window.location.replace(
+          if (search_value != "") { 
+            window.location.replace(
             `/users/${this.dataset.id}?value=${search_value}`
           );
+          } else {
+            window.location.replace(
+            `/users/${this.dataset.id}`
+          );
+          }
         });
       </script>
     </div>
