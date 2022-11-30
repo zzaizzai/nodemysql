@@ -21,7 +21,10 @@
         Parent Work
       </button>
       <h5>Information of requests</h5>
-      <h4><%= requests[0].title %> (id: <span id="request-id" ><%= requests[0].request_id %></span> )</h4>
+      <h4>
+        <%= requests[0].title %> (id:
+        <span id="request-id"><%= requests[0].request_id %></span> )
+      </h4>
       <div>Start date <%= requests[0].start_date %></div>
       <div>Due date <%= requests[0].due_date %></div>
       <div>parent_work : <%= requests[0].work_id %></div>
@@ -35,10 +38,19 @@
     <div class="mx-3 container"><h5>Samples</h5></div>
 
     <div class="mx-3 container">
-      <h5 class="comments-box">Comments</h5>
-      <div></div>
-      <textarea name="" id="" cols="50" rows="2" class="mx-2"></textarea>
-      <button>Send</button>
+      <h5 class="">Comments</h5>
+      <div class="comments-box"></div>
+      <div class="comment-input row">
+        <textarea
+          name=""
+          id="comment-text"
+          cols="50"
+          rows="1"
+          class="mx-2"
+        ></textarea>
+        <input id="input-user-id" type="number" style="width: 80px;" />
+        <button id="add-comment">Send</button>
+      </div>
     </div>
     <div>
       <ul class="list-group">
@@ -77,35 +89,65 @@
         <li class="list-group-item">
           <h4>Next</h4>
           <% for (var i =0; i < requests_foll.length; i++){ %>
-          <h5><%= requests_foll[i].title %></h5>
-          <button
-            class="request-more mx-2"
-            data-id="<%= requests_foll[i].request_id%>"
-          >
-            More
-          </button>
+          <div class="row mx-2 my-2">
+            <h5><%= requests_foll[i].title %></h5>
+            <button
+              class="request-more mx-2"
+              data-id="<%= requests_foll[i].request_id%>"
+              onclick="location.href ='/requests/<%= requests_foll[i].request_id %>'"
+            >
+              More
+            </button>
+          </div>
+
+          <% } %>
         </li>
       </ul>
-
-      <% } %>
     </div>
 
     <div>add comments from user</div>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
     <script>
-      var request_id = $('#request-id').text();
+      var request_id = $("#request-id").text();
+
       $.ajax({
         method: "GET",
-        url: `/requests/${request_id}/get_comments`
-      }).done((result)=> {
-        console.log(result.comments)
-        result.comments.forEach(element => {
-          $('.comments-box').append(`<div>${element.user_name}: ${element.comment_text}</div>`)
-          
+        url: `/requests/${request_id}/get_comments`,
+      }).done((result) => {
+        console.log(result.comments);
+        result.comments.forEach((element) => {
+          $(".comments-box").append(
+            `<div> <span class="font-weight-bold">${element.user_name}</span>: ${element.comment_text} &nbsp&nbsp <small>${element.comment_create_datetime}</small> </div>`
+          );
         });
+      });
 
-      })
+      $("#add-comment").click(() => {
+        console.log("add comment");
+        console.log(request_id);
+        var now_time = new Date();
+        var formatted_time =
+          now_time.toLocaleDateString() + " " + now_time.toLocaleTimeString();
+        var user_id = $("#input-user-id").val();
+        console.log(user_id);
+        if (!user_id) {
+          console.log("no user id");
+          return;
+        }
+        $.ajax({
+          method: "POST",
+          url: `/requests/add_comment`,
+          data: {
+            comment_user_id: user_id,
+            create_datetime: formatted_time,
+            request_id: request_id,
+            comment_text: $("#comment-text").val(),
+          },
+        }).done(() => {
+          window.location.reload();
+        });
+      });
     </script>
 
     <script

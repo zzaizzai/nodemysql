@@ -24,6 +24,15 @@ router.get('/requests/:requests_id/get_comments', (req, res) => {
 
 })
 
+router.post('/requests/add_comment', (req, res) => {
+    console.log(req.body)
+    const sql = `insert into request_comments (request_id, comment_text, comment_create_datetime, comment_user_id) values("${req.body.request_id}", "${req.body.comment_text}", "${req.body.create_datetime}", "${req.body.comment_user_id}");`
+    con.query(sql, (err, result) => {
+        if (err) { throw err }
+        console.log(result)
+        res.status(200).send({ message: "success" })
+    })
+})
 
 router.get('/requests/mode/add', (req, res) => {
     var work_id_in_query = "0"

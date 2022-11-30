@@ -46,6 +46,7 @@ app.use('/', require('./routes/users.js'));
 app.use('/', require('./routes/works.js'));
 app.use('/', require('./routes/requests.js'));
 app.use('/', require('./routes/samples.js'));
+app.use('/', require('./routes/login.js'));
 
 
 app.get('/test', function (req, res) {
